@@ -133,6 +133,7 @@ body {
     overflow-x: auto;
     min-width: 100%;
     max-width: 100%;
+    padding: 12px 0px;
 }
 
 .footer {
