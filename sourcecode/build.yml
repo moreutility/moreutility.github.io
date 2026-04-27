@@ -1,0 +1,32 @@
+name: More
+on: [push]
+jobs:
+  release:
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install dependencies
+        run: npm install
+      - name: Build for macOS (on Mac runner)
+        if: matrix.os == 'macos-latest'
+        run: npx electron-builder --mac
+      - name: Build for Win and Linux (on Ubuntu runner)
+        if: matrix.os == 'ubuntu-latest'
+        run: npx electron-builder --win --linux
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Build-${{ matrix.os }}
+          path: |
+            dist/*.exe
+            dist/*.dmg
+            dist/*.deb
+            dist/*.AppImage
